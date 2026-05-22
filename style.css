@@ -4,6 +4,7 @@
 body {
   position: absolute;
   margin: 0;
+  width: 100%;
   background: #1E1E1E;
 }
 .main{
@@ -127,41 +128,56 @@ body {
 
 
 
-
 .films {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-
   margin-top: 100px;
 }
-
 .film {
-  width: 350px;
-  height: 500px;
-  margin: 50px 100px 50px 100px;
+  display: flex;
+  flex-direction: column; 
+  align-items: center;
   
+  /* Трохи зменшуємо ширину картки (було 430px) */
+  width: 340px;
+  /* Підганяємо загальну висоту під нові розміри */
+  height: 570px;
+  
+  margin: 30px 40px; /* Менші відступи, щоб вміщалося більше карток в один ряд */
   background: rgba(97, 122, 159, 0.67);
   border-radius: 10px;
 
   .poster {
-    margin: 25px;
-    width: 300px;
-    height: 325px;
+    margin: 20px;
+    margin-bottom: 15px; /* Даємо тексту трохи дихати */
+    
+    /* Нові пропорційні розміри 2:3 (290-ширина, 435-висота) */
+    width: 290px;
+    height: 435px; 
+    
     background: rgba(163, 163, 163, 0.56);
     border-radius: 10px;
+    object-fit: cover;
   }
-  p{
-    margin: 25px;
+
+  p {
+    margin: 0 20px 20px 20px; /* прибираємо верхній марджин, регулюємо бокові */
     font-family: 'Inter';
     font-style: normal;
-    font-weight: 400;
-    font-size: 32px;
-    line-height: 39px;
+    font-weight: 500;
+    
+    /* Зменшуємо розмір шрифту для акуратності */
+    font-size: 20px;
+    line-height: 26px;
+    text-align: center; /* Центруємо назву для балансу */
+    color: rgba(255, 255, 255, 0.9); /* Робимо текст трохи яскравішим */
 
-    color: rgba(255, 255, 255, 0.7);
-
-
+    /* Захист від злітання верстки, якщо назва задовга */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 90%; /* щоб трикрапка спрацьовувала до того, як текст вилізе за краї */
   }
 }
 
