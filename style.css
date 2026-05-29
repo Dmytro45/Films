@@ -1,220 +1,485 @@
-@import url('https://fonts.googleapis.com/css2?family=Jersey+25&family=Langar&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Jersey+25&family=Langar&display=swap');
+/* ==========================================================================
+   1. ШРИФТИ ТА БАЗОВІ НАЛАШТУВАННЯ (GLOBAL)
+   ========================================================================== */
 @import url('https://fonts.googleapis.com/css2?family=Gentium+Book+Plus:ital,wght@0,400;0,700;1,400;1,700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Jersey+25&family=Langar&display=swap');
-body {
-  position: absolute;
-  margin: 0;
-  width: 100%;
-  background: #1E1E1E;
-}
-.main{
-  background: rgba(100, 120, 233, 0.52);
-}
-.header {
 
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  background-color: #111111; /* Глибокий кінематографічний чорний */
+  color: #ffffff;
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+}
+
+.main {
+  background: #161616; /* Трохи світліший фон для контентної зони */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==========================================================================
+   2. ШАПКА САЙТУ (HEADER & NAVIGATION)
+   ========================================================================== */
+.header {
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: space-between; /* Рівномірний розподіл елементів */
   width: 100%;
-  left: 0px;
-  top: 0px;
-  height: 150px;
-  background: rgba(113, 127, 205, 0.5);
-}
-.logo{
-    margin-left: 100px;
-    margin-right: 150px;
-    font-family: 'Langar';
-    font-style: bold;
-    font-weight: 400;
-    font-size: 64px;
-    color: #FFFFFF;
-    
-}
-.nav{
-    display: flex;
-    flex-direction: row;
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 32px;
-    color: #FFFFFF;
-    ul{
-        display: flex;
-        flex-direction: row;
-        list-style: none;
-    }
-    a{
-        margin-left: 200px;
-        text-decoration: none;
-        color: #FFFFFF;
-    }
+  height: 100px; /* Трохи компактніша та акуратніша шапка */
+  background: #1a1a1a; /* Чистий темний колір замість синього */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05); /* Ледь помітна лінія розділення */
+  padding: 0 40px;
+  box-sizing: border-box;
 }
 
+.logo {
+  font-family: 'Langar', serif;
+  font-weight: 400;
+  font-size: 40px; /* Зменшено для кращого балансу */
+  color: #ff4a4a; /* Акцентний червоний бренд-колір */
+  margin: 0;
+  user-select: none;
+  transition: opacity 0.2s ease;
+}
+.logo:hover {
+  opacity: 0.85;
+}
 
+.nav {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: 18px; /* Зменшено гігантський розмір для витонченості */
+}
 
+.nav a {
+  margin-left: 40px;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
 
+.nav a:hover {
+  color: #ff4a4a; /* Підсвічування червоним при наведенні */
+}
 
-
-
-
-
-
+/* ==========================================================================
+   3. ИНТЕРФЕЙС УПРАВЛІННЯ (SEARCH & LIKES BUTTONS)
+   ========================================================================== */
 .buttons {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-around;
-  margin-top: 30px; 
+  justify-content: center;
+  gap: 30px;
+  margin-top: 40px;
+  padding: 0 20px;
 }
 
+/* Блок Пошуку */
 .search {
   display: flex;
   align-items: center;
-  margin-right: 250px;
 }
 
 .search__input input {
-  width: 638px;
-  height: 50px;
+  width: 450px; /* Більш збалансована ширина */
+  height: 46px;
   padding: 0 20px;
-  border: none;
-  border-radius: 20px 0 0 20px;
-  background-color: #CCCCCC;
-  color: #fff;
-  font-size: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-right: none;
+  border-radius: 24px 0 0 24px; /* Округлені сучасні кути */
+  background-color: #222222;
+  color: #ffffff;
+  font-size: 16px;
   outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.search__input input:focus {
+  border-color: rgba(255, 74, 74, 0.5);
 }
 
 .search__input input::placeholder {
-  color: rgba(0, 0, 0, 0.43);
+  color: rgba(255, 255, 255, 0.4);
 }
 
 .search__button {
-  padding: 0 40px;
+  height: 46px;
+  padding: 0 30px;
   border: none;
-  width: 162px;
-    height: 50px;
-
-  background-color: #000;
-  color: #fff;
-  font-size: 18px;
+  border-radius: 0 24px 24px 0;
+  background-color: #ff4a4a; /* Червона акцентна кнопка */
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.2s ease;
 }
+
 .search__button:hover {
-  background-color: #222;
+  background-color: #e03535;
 }
 
-
+/* Кнопка Вподобань */
 .likes {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 60px;
-  color: #B5B5B5;
-  font-size: 16px;
+  height: 46px;
+  padding: 0 25px;
+  background: #222222;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 500;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
   cursor: pointer;
-  margin-left: 250px;
-  transition: background-color 0.3s ease;
-    height: 42px;
-    background: #B74B4C;
-    border-radius: 10px;
-
+  transition: all 0.2s ease;
 }
 
+.likes:hover {
+  background: #ff4a4a;
+  border-color: #ff4a4a;
+}
 
+.likes p {
+  margin: 0;
+}
 
-
-
-
+/* ==========================================================================
+   4. СІТКА ФІЛЬМІВ ТА КАРТКИ (MOVIES GRID & CARDS)
+   ========================================================================== */
 .films {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  margin-top: 100px;
+  
+  /* Змінюємо на space-between! Вона візьме твої 5 карток і рівномірно 
+     розподілить їх від лівого до правого краю, заповнивши всю ширину без дірок */
+  justify-content: space-between; 
+  
+  /* Трохи зменшуємо геп, щоб карткам було вільніше залітати в ряд */
+  gap: 20px; 
+  
+  /* Центруємо всю сітку по центру сторінки */
+  margin: 50px auto 0 auto; 
+  
+  /* Дозволяємо сітці розширитися до 1500px, щоб 5 карток точно вмістилися 
+     разом із великими проміжками на твоєму моніторі */
+  max-width: 1500px; 
+  
+  /* Наш улюблений відступ до футера */
+  padding: 0 20px 80px 20px; 
+  box-sizing: border-box;
 }
+
+/* Маленький фікс для карток, щоб вони мали фіксовану, стабільну ширину */
 .film {
+  position: relative;
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
   align-items: center;
-  
-  /* Трохи зменшуємо ширину картки (було 430px) */
-  width: 340px;
-  /* Підганяємо загальну висоту під нові розміри */
-  height: 570px;
-  
-  margin: 30px 40px; /* Менші відступи, щоб вміщалося більше карток в один ряд */
-  background: rgba(97, 122, 159, 0.67);
-  border-radius: 10px;
-
-  .poster {
-    margin: 20px;
-    margin-bottom: 15px; /* Даємо тексту трохи дихати */
-    
-    /* Нові пропорційні розміри 2:3 (290-ширина, 435-висота) */
-    width: 290px;
-    height: 435px; 
-    
-    background: rgba(163, 163, 163, 0.56);
-    border-radius: 10px;
-    object-fit: cover;
-  }
-
-  p {
-    margin: 0 20px 20px 20px; /* прибираємо верхній марджин, регулюємо бокові */
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 500;
-    
-    /* Зменшуємо розмір шрифту для акуратності */
-    font-size: 20px;
-    line-height: 26px;
-    text-align: center; /* Центруємо назву для балансу */
-    color: rgba(255, 255, 255, 0.9); /* Робимо текст трохи яскравішим */
-
-    /* Захист від злітання верстки, якщо назва задовга */
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    width: 90%; /* щоб трикрапка спрацьовувала до того, як текст вилізе за краї */
-  }
+  width: 260px; /* Повертаємо твою хорошу ширину */
+  background: #1e1e1e;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.3s cubic-bezier(0.2, 1, 0.2, 1), box-shadow 0.3s ease;
 }
 
+.film:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
+}
 
+.film .poster {
+  width: 100%;
+  height: 350px; /* Трохи зменшили висоту для збереження красивих пропорцій 2:3 */
+  object-fit: cover;
+  background: #2a2a2a;
+}
 
+.film p {
+  margin: 15px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 22px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.9);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 85%;
+}
 
+/* Кнопка-сердечко поверх постера */
+.fav-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: transparent !important;
+  border: none;
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  margin: 0 !important;
+  padding: 0;
+  transition: transform 0.2s ease;
+}
 
+.fav-btn svg {
+  width: 28px;
+  height: 28px;
+  opacity: 0.6; 
+  transition: all 0.2s ease;
+  filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.9)); 
+}
 
+.fav-btn:hover {
+  transform: scale(1.15);
+}
 
+.fav-btn:hover svg {
+  opacity: 1;
+}
 
+.fav-btn.active svg {
+  opacity: 1;
+}
 
+/* ==========================================================================
+   5. ДИНАМІЧНЕ БУРГЕР-МЕНЮ (BURGER MENU)
+   ========================================================================== */
+.burger-menu {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 26px;
+  height: 18px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 100;
+  margin-left: 20px;
+}
 
+.burger-menu span {
+  width: 100%;
+  height: 2px;
+  background-color: #ffffff;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
 
+/* Велике виїжджаюче меню */
+.dropdown-menu {
+  position: fixed;
+  top: 0;
+  right: -100%; 
+  width: 320px;
+  height: 100vh;
+  background-color: #161616;
+  z-index: 99;
+  padding: 100px 30px 30px 30px;
+  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.8);
+  transition: right 0.4s cubic-bezier(0.1, 1, 0.1, 1);
+  overflow-y: auto;
+  box-sizing: border-box;
+  border-left: 1px solid rgba(255, 255, 255, 0.05);
+}
 
+.dropdown-menu h3 {
+  color: #ffffff;
+  font-size: 22px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 10px;
+}
 
+.dropdown-menu.active {
+  right: 0;
+}
 
+/* Сітка жанрів всередині */
+.genres-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
 
+.genres-grid a {
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  font-size: 16px;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
 
+.genres-grid a:hover {
+  background: #ff4a4a;
+  color: #ffffff;
+  transform: translateX(5px);
+}
+
+/* Анімація іконки хрестика */
+.burger-menu.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+.burger-menu.open span:nth-child(2) { opacity: 0; }
+.burger-menu.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+/* ==========================================================================
+   6. МОДАЛЬНЕ ВІКНО (MODAL POPUP)
+   ========================================================================== */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(10px);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.modal-content {
+  background-color: #1a1a1a;
+  color: #ffffff;
+  width: 100%;
+  max-width: 750px;
+  border-radius: 16px;
+  position: relative;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+  animation: fadeIn 0.25s ease-out;
+  max-height: 90vh;
+  overflow-y: auto;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.modal-close {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 32px;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: color 0.2s;
+  z-index: 1010;
+}
+
+.modal-close:hover {
+  color: #ff4a4a;
+}
+
+.modal-flex {
+  display: flex;
+  gap: 35px;
+  padding: 40px;
+}
+
+.modal-poster {
+  width: 220px;
+  height: 330px;
+  border-radius: 10px;
+  object-fit: cover;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+}
+
+.modal-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.modal-info h2 {
+  font-size: 26px;
+  margin: 0;
+  font-weight: 700;
+}
+
+.modal-rating {
+  font-weight: 700;
+  color: #ffbd00;
+  font-size: 16px;
+}
+
+.modal-overview h3 {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 5px;
+}
+
+.modal-overview p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* ==========================================================================
+   7. ФУТЕР (FOOTER)
+   ========================================================================== */
 .footer {
-
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 150px;
-  background: rgba(113, 127, 205, 0.5);
-  margin-top: 200px;
+  height: 100px;
+  background: #1a1a1a;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  margin-top: auto; /* Притискає футер до низу, якщо контенту мало */
+}
 
-  p{
-    font-family: 'Gentium Book Plus';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 48px;
+.footer p {
+  font-family: 'Gentium Book Plus', serif;
+  font-size: 24px; /* Приведено до адекватного розміру */
+  color: rgba(255, 255, 255, 0.4);
+  margin: 0;
+}
 
+/* ==========================================================================
+   8. АДАПТИВНІСТЬ ТА МЕДІА-ЗАПИТИ (RESPONSIVE)
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .search__input input { width: 300px; }
+  .buttons { margin-top: 30px; }
+}
 
-    color: #FFFFFF;
+@media (max-width: 768px) {
+  .nav { display: none; }
+  .dropdown-menu { width: 100%; }
+  .buttons { flex-direction: column; gap: 15px; }
+  .search__input input { width: 70vw; }
+}
 
-
+@media (max-width: 650px) {
+  .modal-flex {
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 20px;
+    gap: 20px;
   }
+  .modal-poster { width: 160px; height: 240px; }
+  .modal-info h2 { font-size: 20px; text-align: center; }
 }

@@ -7,57 +7,67 @@
     <link rel="stylesheet" href="style.css" />
   </head>
 
-
-
-
-
   <body>
-
-
-
-
     <main class="main" id="main">
+      <header class="header" id="header">
+        <h1
+          class="logo"
+          id="logo"
+          style="cursor: pointer"
+          onclick="window.location.reload()"
+        >
+          KinoCity
+        </h1>
 
+        <nav class="nav" id="nav">
+          <a href="#" class="genre-link" data-genre="35">Комедія</a>
+          <a href="#" class="genre-link" data-genre="27">Жахи</a>
+          <a href="#" class="genre-link" data-genre="18">Драма</a>
+          <a href="#" class="genre-link" data-genre="9648">Детектив</a>
+        </nav>
 
-    <header class="header" id="header">
-      <h1 class="logo" id="logo">KinoCity</h1>
-      <nav class="nav" id="nav">
-          <a href="#">Comedy</a>
-          <a href="#">Horror</a>
-          <a href="#">Drama</a>
-          <a href="#">Detective</a>
-      </nav>
-    </header>
+        <button class="burger-menu" id="burgerButton">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
 
+        <div class="dropdown-menu" id="dropdownMenu">
+          <h3>Усі жанри</h3>
+          <div class="genres-grid" id="allGenresContainer"></div>
+        </div>
+      </header>
 
-
+      <div class="modal" id="movieModal">
+        <div class="modal-content">
+          <span class="modal-close" id="modalClose">&times;</span>
+          <div class="modal-body" id="modalBody"></div>
+        </div>
+      </div>
 
       <div class="buttons" id="buttons">
         <div class="search">
           <div class="search__input" id="searchInputContainer">
-            <input type="text" placeholder="Шукати фільми та серіали" id="searchInput"/>
+            <input
+              type="text"
+              placeholder="Шукати фільми та серіали"
+              id="searchInput"
+            />
           </div>
-
           <button class="search__button" id="searchButton">Шукати</button>
         </div>
 
         <div class="likes" id="likes">
-            <p>Вподобання</p>
+          <p>Вподобання ❤️</p>
         </div>
- 
       </div>
+
       <div class="films" id="films"></div>
 
-
-    <footer class="footer" id="footer">
-      <p>Enjoy watching!</p>
-    </footer>
-
+      <footer class="footer" id="footer">
+        <p>Enjoy watching!</p>
+      </footer>
     </main>
-
-
-
-
 
     <script src="script.js"></script>
   </body>
