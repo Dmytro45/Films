@@ -4,17 +4,14 @@
 const API_KEY = 'd7dda6ea6cbb5e025fa3e241f9316669'; 
 const IMAGE_PATH = 'https://image.tmdb.org/t/p/w500';
 
-// Базові посилання
 const POPULAR_MOVIES_URL = `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=uk-UA&page=1`;
 const SEARCH_API_URL = `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&language=uk-UA&query=`;
 const GENRE_API_URL = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&language=uk-UA&with_genres=`;
 const ALL_GENRES_URL = `https://api.themoviedb.org/3/genre/movie/list?api_key=${API_KEY}&language=uk-UA`;
 
-// Константа головної сторінки (можна легко замінити на іншу за бажанням)
 const HOME_PAGE_URL = POPULAR_MOVIES_URL; 
 
-// Елементи з HTML
-const filmsContainer = document.getElementById('films');
+const filmsContainer = document.getElementById('filmsContainer');
 const searchInput = document.getElementById('searchInput');
 const searchButton = document.getElementById('searchButton');
 const likesButton = document.getElementById('likes');
@@ -22,40 +19,59 @@ const logo = document.getElementById('logo');
 const burgerButton = document.getElementById('burgerButton');
 const dropdownMenu = document.getElementById('dropdownMenu');
 
-// Стан додатку
 let showingFavorites = false; 
+
+// ==========================================
+// 1.5. КЕРУВАННЯ ЛОАДЕРОМ
+// ==========================================
+function showLoader() {
+    const loader = document.getElementById('loader');
+    if (loader) loader.classList.remove('hidden');
+    
+    const oldFilms = filmsContainer.querySelectorAll('.film');
+    oldFilms.forEach(film => film.remove());
+    
+    const noResultsMsg = filmsContainer.querySelector('.no-results-msg');
+    if (noResultsMsg) noResultsMsg.remove();
+}
+
+function hideLoader() {
+    const loader = document.getElementById('loader');
+    if (loader) loader.classList.add('hidden');
+}
 
 // ==========================================
 // 2. ГОЛОВНІ ФУНКЦІЇ ЗАПИТІВ ТА РЕНДЕРУ ФІЛЬМІВ
 // ==========================================
-
-// Універсальна функція запиту до сервера
 async function getMovies(url) {
     try {
-        const response = await fetch(url);
-        const data = await response.json();
+        showLoader();
+        const res = await fetch(url);
+        const data = await res.json();
         
         if (!data.results || data.results.length === 0) {
-            filmsContainer.innerHTML = '<p style="text-align: center; width: 100%; color: rgba(255,255,255,0.6); font-size: 24px; margin-top: 50px;">Нічого не знайдено 😢</p>';
+            hideLoader();
+            filmsContainer.innerHTML += '<p class="no-results-msg" style="text-align: center; width: 100%; color: rgba(255,255,255,0.6); font-size: 24px; margin-top: 50px;">Нічого не знайдено 😢</p>';
             return;
         }
-
         renderMovies(data.results);
     } catch (error) {
+        hideLoader();
         console.error("Не вдалося завантажити фільми:", error);
     }
 }
 
-// Функція динамічного створення карток на екрані
 function renderMovies(movies) {
-    filmsContainer.innerHTML = ''; 
+    hideLoader();
+    const oldFilms = filmsContainer.querySelectorAll('.film');
+    oldFilms.forEach(film => film.remove());
 
     const savedItems = JSON.parse(localStorage.getItem('myFavorites')) || [];
 
     movies.forEach(movie => {
         const filmCard = document.createElement('div');
         filmCard.classList.add('film'); 
-        filmCard.style.cursor = 'pointer'; // Робимо вказівник миші у вигляді пальчика
+        filmCard.style.cursor = 'pointer'; 
 
         const posterUrl = movie.poster_path ? (IMAGE_PATH + movie.poster_path) : 'https://via.placeholder.com/375x563?text=No+Poster';
         const isFav = savedItems.some(item => item.id === movie.id);
@@ -74,12 +90,8 @@ function renderMovies(movies) {
             </button>
         `;
 
-        // КЛІК НА КАРТКУ — ВІДКРИВАЄ ОПИС ФІЛЬМУ
-        filmCard.addEventListener('click', () => {
-            openMovieModal(movie);
-        });
+        filmCard.addEventListener('click', () => openMovieModal(movie));
 
-        // Клік по сердечку (завдяки e.stopPropagation() вікно з описом не відкриється)
         const favBtn = filmCard.querySelector('.fav-btn');
         favBtn.addEventListener('click', (e) => {
             e.stopPropagation(); 
@@ -89,74 +101,16 @@ function renderMovies(movies) {
         filmsContainer.appendChild(filmCard);
     });
 }
-// ==========================================
-// 8. ЛОГІКА МОДАЛЬНОГО ВІКНА (ОПИС ФІЛЬМУ)
-// ==========================================
-const movieModal = document.getElementById('movieModal');
-const modalClose = document.getElementById('modalClose');
-const modalBody = document.getElementById('modalBody');
-
-// Функція відкриття вікна та заповнення даними з API
-function openMovieModal(movie) {
-    if (!movieModal || !modalBody) return;
-
-    const posterUrl = movie.poster_path ? (IMAGE_PATH + movie.poster_path) : 'https://via.placeholder.com/375x563?text=No+Poster';
-    
-    // Перевіряємо, чи є опис (інколи для старих/невідомих фільмів опис в базі порожній)
-    const overviewText = movie.overview ? movie.overview : "На жаль, опис для цього фільму українською мовою поки що відсутній. 😔";
-    
-    // Округлюємо рейтинг до однієї цифри після коми (наприклад, 7.8)
-    const rating = movie.vote_average ? movie.vote_average.toFixed(1) : "Немає оцінки";
-    // Отримуємо рік релізу
-    const releaseYear = movie.release_date ? movie.release_date.split('-')[0] : 'Невідомо';
-
-    // Формуємо красиву розмітку всередині вікна
-    modalBody.innerHTML = `
-        <div class="modal-flex">
-            <img src="${posterUrl}" alt="${movie.title}" class="modal-poster">
-            <div class="modal-info">
-                <h2>${movie.title} (${releaseYear})</h2>
-                <div class="modal-rating">⭐ Рейтинг TMDB: ${rating}/10</div>
-                <div class="modal-overview">
-                    <h3>Короткий опис:</h3>
-                    <p>${overviewText}</p>
-                </div>
-            </div>
-        </div>
-    `;
-
-    // Показуємо вікно за допомогою Flexbox
-    movieModal.style.display = 'flex';
-}
-
-// Закриття вікна при кліку на хрестик
-if (modalClose) {
-    modalClose.addEventListener('click', () => {
-        movieModal.style.display = 'none';
-    });
-}
-
-// Закриття вікна при кліку на будь-яку зону екрану навколо вікна
-window.addEventListener('click', (event) => {
-    if (event.target === movieModal) {
-        movieModal.style.display = 'none';
-    }
-});
 
 // ==========================================
 // 3. ЛОГІКА РОБОТИ З УЛЮБЛЕНИМИ (LOCALSTORAGE)
 // ==========================================
-
 function toggleFavorite(movie) {
     let savedItems = JSON.parse(localStorage.getItem('myFavorites')) || [];
     const index = savedItems.findIndex(item => item.id === movie.id);
 
     if (index === -1) {
-        savedItems.push({
-            id: movie.id,
-            title: movie.title,
-            poster_path: movie.poster_path
-        });
+        savedItems.push({ id: movie.id, title: movie.title, poster_path: movie.poster_path });
     } else {
         savedItems.splice(index, 1);
     }
@@ -166,13 +120,11 @@ function toggleFavorite(movie) {
     if (showingFavorites) {
         showFavorites();
     } else {
-        // Оновлюємо іконки на поточній сторінці без перезавантаження
         const currentCards = document.querySelectorAll('.film');
         currentCards.forEach(card => {
             const btn = card.querySelector('.fav-btn');
             const id = parseInt(btn.getAttribute('data-id'));
             const isNowFav = savedItems.some(item => item.id === id);
-            
             const svg = btn.querySelector('svg');
             if (isNowFav) {
                 btn.classList.add('active');
@@ -186,14 +138,19 @@ function toggleFavorite(movie) {
         });
     }
 }
+
 function showFavorites() {
     const savedItems = JSON.parse(localStorage.getItem('myFavorites')) || [];
+    const oldFilms = filmsContainer.querySelectorAll('.film');
+    oldFilms.forEach(film => film.remove());
     
+    const noResultsMsg = filmsContainer.querySelector('.no-results-msg');
+    if (noResultsMsg) noResultsMsg.remove();
+
     if (savedItems.length === 0) {
-        filmsContainer.innerHTML = '<p style="text-align: center; width: 100%; color: rgba(255,255,255,0.6); font-size: 24px; margin-top: 50px;">Ви ще не додали жодного фільму в улюблені 🤍</p>';
+        filmsContainer.innerHTML += '<p class="no-results-msg" style="text-align: center; width: 100%; color: rgba(255,255,255,0.6); font-size: 24px; margin-top: 50px;">Ви ще не додали жодного фільму 🤍</p>';
         return;
     }
-    
     renderMovies(savedItems);
 }
 
@@ -202,7 +159,6 @@ function showFavorites() {
 // ==========================================
 function performSearch() {
     const searchTerm = searchInput.value.trim();
-
     if (searchTerm && searchTerm !== '') {
         getMovies(SEARCH_API_URL + encodeURIComponent(searchTerm));
     } else {
@@ -212,38 +168,23 @@ function performSearch() {
 
 if (searchButton) searchButton.addEventListener('click', performSearch);
 if (searchInput) {
-    searchInput.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter') performSearch();
-    });
+    searchInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') performSearch(); });
 }
 
 // ==========================================
-// 5. ДИНАМІЧНЕ БУРГЕР-МЕНЮ ТА НАВІГАЦІЯ ПО ЖАНРАХ
+// 5. ДИНАМІЧНЕ БУРГЕР-МЕНЮ ТА ЖАНРИ
 // ==========================================
-
-// Завантаження ВСІХ жанрів з сервера
 async function loadAllGenres() {
     try {
         const response = await fetch(ALL_GENRES_URL);
-        if (!response.ok) throw new Error(`Статус: ${response.status}`);
-
         const data = await response.json();
-        
-        if (data.genres && data.genres.length > 0) {
-            renderGenresMenu(data.genres);
-        }
-    } catch (error) {
-        console.error("Не вдалося завантажити список жанрів:", error);
-        const container = document.getElementById('allGenresContainer');
-        if (container) container.innerHTML = `<p style="color: #ff4a4a; padding: 10px;">Помилка завантаження жанрів</p>`;
-    }
+        if (data.genres && data.genres.length > 0) renderGenresMenu(data.genres);
+    } catch (error) { console.error("Помилка жанрів:", error); }
 }
 
-// Рендер посилань у випадаюче меню
 function renderGenresMenu(genres) {
     const container = document.getElementById('allGenresContainer');
     if (!container) return;
-
     container.innerHTML = ''; 
 
     genres.forEach(genre => {
@@ -253,32 +194,25 @@ function renderGenresMenu(genres) {
         genreLink.setAttribute('data-genre', genre.id);
         genreLink.textContent = genre.name;
 
-        genreLink.addEventListener('click', (event) => {
-            event.preventDefault();
+        genreLink.addEventListener('click', (e) => {
+            e.preventDefault();
             resetAppState();
-
-            // Автоматично закриваємо бургер після вибору жанру
             if (dropdownMenu) dropdownMenu.classList.remove('active');
             if (burgerButton) burgerButton.classList.remove('open');
-
             getMovies(GENRE_API_URL + genre.id);
         });
-
         container.appendChild(genreLink);
     });
 }
 
-// Обробка подій для статичних 4-х жанрів у шапці
 document.querySelectorAll('#nav .genre-link').forEach(link => {
-    link.addEventListener('click', (event) => {
-        event.preventDefault();
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
         resetAppState();
-        const genreId = event.target.getAttribute('data-genre');
-        getMovies(GENRE_API_URL + genreId);
+        getMovies(GENRE_API_URL + e.target.getAttribute('data-genre'));
     });
 });
 
-// Перемикач кнопки бургер-меню (відкрити/закрити)
 if (burgerButton && dropdownMenu) {
     burgerButton.addEventListener('click', () => {
         burgerButton.classList.toggle('open');
@@ -287,10 +221,8 @@ if (burgerButton && dropdownMenu) {
 }
 
 // ==========================================
-// 6. СЛУХАЧІ ІНТЕРФЕЙСУ (КНОПКА ЛАЙКІВ ТА ЛОГО)
+// 6. СЛУХАЧІ ІНТЕРФЕЙСУ ТА СКИДАННЯ
 // ==========================================
-
-// Допоміжна функція скидання інтерфейсу в базовий стан
 function resetAppState() {
     showingFavorites = false;
     if (likesButton) {
@@ -300,11 +232,9 @@ function resetAppState() {
     if (searchInput) searchInput.value = '';
 }
 
-// Клік на кнопку "Вподобання"
 if (likesButton) {
     likesButton.addEventListener('click', () => {
         showingFavorites = !showingFavorites;
-
         if (showingFavorites) {
             likesButton.querySelector('p').textContent = 'Назад на головну 🏠';
             showFavorites();
@@ -315,7 +245,6 @@ if (likesButton) {
     });
 }
 
-// Клік на Логотип KinoCity — повне повернення "додому" без перезавантаження сторінки
 if (logo) {
     logo.addEventListener('click', () => {
         resetAppState();
@@ -326,7 +255,45 @@ if (logo) {
 }
 
 // ==========================================
-// 7. СТАРТ ДОДАТКУ ПРИ ЗАВАНТАЖЕННІ
+// 6.5. ЛОГІКА МОДАЛЬНОГО ВІКНА (ОПИСУ ФІЛЬМУ)
+// ==========================================
+const movieModal = document.getElementById('movieModal');
+const modalClose = document.getElementById('modalClose');
+const modalBody = document.getElementById('modalBody');
+
+function openMovieModal(movie) {
+    if (!movieModal || !modalBody) return;
+
+    const posterUrl = movie.poster_path ? (IMAGE_PATH + movie.poster_path) : 'https://via.placeholder.com/375x563?text=No+Poster';
+    const rating = movie.vote_average ? movie.vote_average.toFixed(1) : 'Немає';
+    const overview = movie.overview ? movie.overview : 'Опис до цього фільму поки що відсутній українською мовою.';
+
+    modalBody.innerHTML = `
+        <div class="modal-flex">
+            <img src="${posterUrl}" alt="${movie.title}" class="modal-poster">
+            <div class="modal-info">
+                <h2>${movie.title}</h2>
+                <div class="modal-rating">Рейтинг TMDB: ⭐ ${rating}/10</div>
+                <div class="modal-overview">
+                    <h3>Опис фільму:</h3>
+                    <p>${overview}</p>
+                </div>
+            </div>
+        </div>
+    `;
+    movieModal.style.display = 'flex';
+}
+
+if (modalClose) {
+    modalClose.addEventListener('click', () => { movieModal.style.display = 'none'; });
+}
+
+window.addEventListener('click', (e) => {
+    if (e.target === movieModal) movieModal.style.display = 'none';
+});
+
+// ==========================================
+// 7. СТАРТ ДОДАТКУ
 // ==========================================
 loadAllGenres();
 getMovies(HOME_PAGE_URL);
