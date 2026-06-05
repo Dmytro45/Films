@@ -45,6 +45,7 @@ body {
   user-select: none;
   transition: opacity 0.2s ease;
 }
+
 .logo:hover {
   opacity: 0.85;
 }
@@ -69,7 +70,7 @@ body {
 }
 
 /* ==========================================================================
-   3. ИНТЕРФЕЙС УПРАВЛІННЯ (SEARCH & LIKES BUTTONS)
+   3. ІНТЕРФЕЙС УПРАВЛІННЯ (SEARCH & LIKES BUTTONS)
    ========================================================================== */
 .buttons {
   display: flex;
@@ -175,24 +176,9 @@ body {
   border-radius: 12px;
   overflow: hidden;
   transition: transform 0.3s cubic-bezier(0.2, 1, 0.2, 1), box-shadow 0.3s ease;
-
-  /* ДОДАЄМО НАШУ НОВУ АНІМАЦІЮ:
-     Вона триватиме 0.4 секунди, проявлятиметься плавно (ease-out) 
-     і зафіксує фінальний стан (forward) */
   animation: fadeInVisible 0.4s ease-out forwards;
 }
 
-/* Додай цей блок у самий кінець твого файлу style.css */
-@keyframes fadeInVisible {
-  from {
-    opacity: 0;
-    transform: translateY(15px); /* Картка буде м'яко підніматися знизу вгору на 15 пікселів */
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 .film:hover {
   transform: translateY(-5px) scale(1.02);
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
@@ -342,6 +328,7 @@ body {
   align-items: center;
   padding: 20px;
   box-sizing: border-box;
+  transition: all 0.3s ease; 
 }
 
 .modal-content {
@@ -368,6 +355,7 @@ body {
   transition: color 0.2s;
   z-index: 1010;
 }
+
 .modal-close:hover { color: #ff4a4a; }
 
 .modal-flex {
@@ -416,11 +404,6 @@ body {
   margin: 0;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.97); }
-  to { opacity: 1; transform: scale(1); }
-}
-
 /* ==========================================================================
    7. ФУТЕР (FOOTER)
    ========================================================================== */
@@ -437,13 +420,13 @@ body {
 
 .footer p {
   font-family: 'Gentium Book Plus', serif;
-  font-size: 24px;
+  font-size: 36px;
   color: rgba(255, 255, 255, 0.4);
   margin: 0;
 }
 
 /* ==========================================================================
-   8. ІНДИКАТОР ЗАВАНТАЖЕННЯ ТА АДАПТИВНІСТЬ
+   8. ІНДИКАТОР ЗАВАНТАЖЕННЯ (LOADER)
    ========================================================================== */
 .loader {
   width: 50px;
@@ -454,22 +437,49 @@ body {
   margin: 40px auto;
   animation: spin 1s linear infinite;
 }
+
 .loader.hidden { display: none !important; }
 
-@keyframes spin { to { transform: rotate(360deg); } }
-
+/* ==========================================================================
+   9. МЕДІА-ЗАПИТИ (RESPONSIVE MEDIA QUERIES)
+   ========================================================================== */
 @media (max-width: 1024px) {
   .search__input input { width: 300px; }
   .buttons { margin-top: 30px; }
 }
+
 @media (max-width: 768px) {
   .nav { display: none; }
   .dropdown-menu { width: 100%; }
   .buttons { flex-direction: column; gap: 15px; }
   .search__input input { width: 70vw; }
 }
+
 @media (max-width: 650px) {
   .modal-flex { flex-direction: column; align-items: center; padding: 30px 20px; gap: 20px; }
   .modal-poster { width: 160px; height: 240px; }
   .modal-info h2 { font-size: 20px; text-align: center; }
+}
+
+/* ==========================================================================
+   10. КЛЮЧОВІ КАДРИ АНІМАЦІЙ (KEYFRAMES)
+   ========================================================================== */
+@keyframes fadeInVisible {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes spin { 
+  to { transform: rotate(360deg); } 
 }

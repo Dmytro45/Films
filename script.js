@@ -1,6 +1,6 @@
-// ==========================================
+// ==========================================================================
 // 1. КОНСТАНТИ ТА КОНФІГУРАЦІЯ API
-// ==========================================
+// ==========================================================================
 const API_KEY = 'd7dda6ea6cbb5e025fa3e241f9316669'; 
 const IMAGE_PATH = 'https://image.tmdb.org/t/p/w500';
 
@@ -11,6 +11,7 @@ const ALL_GENRES_URL = `https://api.themoviedb.org/3/genre/movie/list?api_key=${
 
 const HOME_PAGE_URL = POPULAR_MOVIES_URL; 
 
+// Елементи інтерфейсу (DOM-вузли)
 const filmsContainer = document.getElementById('filmsContainer');
 const searchInput = document.getElementById('searchInput');
 const searchButton = document.getElementById('searchButton');
@@ -18,12 +19,16 @@ const likesButton = document.getElementById('likes');
 const logo = document.getElementById('logo');
 const burgerButton = document.getElementById('burgerButton');
 const dropdownMenu = document.getElementById('dropdownMenu');
+const movieModal = document.getElementById('movieModal');
+const modalClose = document.getElementById('modalClose');
+const modalBody = document.getElementById('modalBody');
 
+// Глобальний стан додатку
 let showingFavorites = false; 
 
-// ==========================================
-// 1.5. КЕРУВАННЯ ЛОАДЕРОМ
-// ==========================================
+// ==========================================================================
+// 2. КЕРУВАННЯ ЛОАДЕРОМ (LOADER)
+// ==========================================================================
 function showLoader() {
     const loader = document.getElementById('loader');
     if (loader) loader.classList.remove('hidden');
@@ -40,9 +45,9 @@ function hideLoader() {
     if (loader) loader.classList.add('hidden');
 }
 
-// ==========================================
-// 2. ГОЛОВНІ ФУНКЦІЇ ЗАПИТІВ ТА РЕНДЕРУ ФІЛЬМІВ
-// ==========================================
+// ==========================================================================
+// 3. ГОЛОВНІ ФУНКЦІЇ ЗАПИТІВ ТА РЕНДЕРУ ФІЛЬМІВ
+// ==========================================================================
 async function getMovies(url) {
     try {
         showLoader();
@@ -94,7 +99,7 @@ function renderMovies(movies) {
 
         const favBtn = filmCard.querySelector('.fav-btn');
         favBtn.addEventListener('click', (e) => {
-            e.stopPropagation(); 
+            e.stopPropagation();
             toggleFavorite(movie);
         });
 
@@ -102,9 +107,9 @@ function renderMovies(movies) {
     });
 }
 
-// ==========================================
-// 3. ЛОГІКА РОБОТИ З УЛЮБЛЕНИМИ (LOCALSTORAGE)
-// ==========================================
+// ==========================================================================
+// 4. ЛОГІКА РОБОТИ З УЛЮБЛЕНИМИ (LOCALSTORAGE)
+// ==========================================================================
 function toggleFavorite(movie) {
     let savedItems = JSON.parse(localStorage.getItem('myFavorites')) || [];
     const index = savedItems.findIndex(item => item.id === movie.id);
@@ -154,9 +159,9 @@ function showFavorites() {
     renderMovies(savedItems);
 }
 
-// ==========================================
-// 4. ЛОГІКА ПОШУКУ
-// ==========================================
+// ==========================================================================
+// 5. ЛОГІКА ПОШУКУ
+// ==========================================================================
 function performSearch() {
     const searchTerm = searchInput.value.trim();
     if (searchTerm && searchTerm !== '') {
@@ -171,15 +176,17 @@ if (searchInput) {
     searchInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') performSearch(); });
 }
 
-// ==========================================
-// 5. ДИНАМІЧНЕ БУРГЕР-МЕНЮ ТА ЖАНРИ
-// ==========================================
+// ==========================================================================
+// 6. ДИНАМІЧНЕ БУРГЕР-МЕНЮ ТА ЖАНРИ
+// ==========================================================================
 async function loadAllGenres() {
     try {
         const response = await fetch(ALL_GENRES_URL);
         const data = await response.json();
         if (data.genres && data.genres.length > 0) renderGenresMenu(data.genres);
-    } catch (error) { console.error("Помилка жанрів:", error); }
+    } catch (error) { 
+        console.error("Помилка жанрів:", error); 
+    }
 }
 
 function renderGenresMenu(genres) {
@@ -220,9 +227,9 @@ if (burgerButton && dropdownMenu) {
     });
 }
 
-// ==========================================
-// 6. СЛУХАЧІ ІНТЕРФЕЙСУ ТА СКИДАННЯ
-// ==========================================
+// ==========================================================================
+// 7. СЛУХАЧІ ІНТЕРФЕЙСУ ТА СКИДАННЯ СТАНУ
+// ==========================================================================
 function resetAppState() {
     showingFavorites = false;
     if (likesButton) {
@@ -254,13 +261,9 @@ if (logo) {
     });
 }
 
-// ==========================================
-// 6.5. ЛОГІКА МОДАЛЬНОГО ВІКНА (ОПИСУ ФІЛЬМУ)
-// ==========================================
-const movieModal = document.getElementById('movieModal');
-const modalClose = document.getElementById('modalClose');
-const modalBody = document.getElementById('modalBody');
-
+// ==========================================================================
+// 8. ЛОГІКА МОДАЛЬНОГО ВІКНО (ОПИС ФІЛЬМУ)
+// ==========================================================================
 function openMovieModal(movie) {
     if (!movieModal || !modalBody) return;
 
@@ -292,8 +295,8 @@ window.addEventListener('click', (e) => {
     if (e.target === movieModal) movieModal.style.display = 'none';
 });
 
-// ==========================================
-// 7. СТАРТ ДОДАТКУ
-// ==========================================
+// ==========================================================================
+// 9. СТАРТ ДОДАТКУ (INITIALIZATION)
+// ==========================================================================
 loadAllGenres();
 getMovies(HOME_PAGE_URL);
